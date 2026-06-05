@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — TaskFlow</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6c63ff;
+            --secondary: #3f37c9;
+            --accent: #f72585;
+            --dark: #1a1a2e;
+            --card-bg: #16213e;
+        }
+        body {
+            background: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .login-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(108,99,255,0.3);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(108,99,255,0.2);
+        }
+        .brand {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .brand span { color: var(--accent); }
+        .subtitle {
+            color: #888;
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 0.9rem;
+        }
+        .form-control {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            border-radius: 10px;
+            padding: 12px 16px;
+        }
+        .form-control:focus {
+            background: rgba(108,99,255,0.1);
+            border-color: var(--primary);
+            color: #fff;
+            box-shadow: 0 0 0 3px rgba(108,99,255,0.2);
+        }
+        .form-label { color: #ccc; font-size: 0.85rem; font-weight: 600; }
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            width: 100%;
+            color: white;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108,99,255,0.4);
+        }
+        .register-link { color: #888; text-align: center; margin-top: 20px; font-size: 0.9rem; }
+        .register-link a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .alert-danger-custom {
+            background: rgba(247,37,133,0.15);
+            border: 1px solid rgba(247,37,133,0.4);
+            color: #f72585;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .alert-success-custom {
+            background: rgba(0,200,100,0.1);
+            border: 1px solid rgba(0,200,100,0.3);
+            color: #00c864;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .input-group-text {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-right: none;
+            color: var(--primary);
+        }
+        .form-control.with-icon {
+            border-left: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="brand">Task<span>Flow</span></div>
+        <div class="subtitle">Sign in to your workspace</div>
+
+        <div th:if="${param.registered}" class="alert-success-custom">
+            <i class="fas fa-check-circle me-2"></i>Account created! Please login.
+        </div>
+        <div th:if="${param.logout}" class="alert-success-custom">
+            <i class="fas fa-sign-out-alt me-2"></i>You have been logged out.
+        </div>
+        <div th:if="${error}" class="alert-danger-custom">
+            <i class="fas fa-exclamation-circle me-2"></i><span th:text="${error}"></span>
+        </div>
+
+        <form th:action="@{/auth/login}" th:object="${loginRequest}" method="post">
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <input type="text" th:field="*{username}" class="form-control with-icon"
+                           placeholder="Enter username" required>
+                </div>
+                <small th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                       class="text-danger"></small>
+            </div>
+            <div class="mb-4">
+                <label class="form-label">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    <input type="password" th:field="*{password}" class="form-control with-icon"
+                           placeholder="Enter password" required>
+                </div>
+            </div>
+            <button type="submit" class="btn-primary-custom">
+                <i class="fas fa-sign-in-alt me-2"></i>Sign In
+            </button>
+        </form>
+
+        <div class="register-link">
+            Don't have an account? <a th:href="@{/auth/register}">Create one</a>
+        </div>
+    </div>
+</body>
+</html>

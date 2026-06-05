@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users — TaskFlow</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --primary: #6c63ff; --accent: #f72585; --dark: #1a1a2e; --surface: #16213e; --surface2: #0f3460; }
+        body { background: var(--dark); color: #e0e0e0; font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+        .navbar-custom { background: var(--surface); border-bottom: 1px solid rgba(108,99,255,0.3); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; }
+        .navbar-brand { font-size: 1.4rem; font-weight: 800; color: var(--primary); text-decoration: none; }
+        .navbar-brand span { color: var(--accent); }
+        .main-content { padding: 32px; max-width: 1000px; margin: 0 auto; }
+        .page-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 24px; }
+        .page-title span { color: var(--primary); }
+        table { width: 100%; border-collapse: collapse; }
+        .table-wrapper { background: var(--surface); border: 1px solid rgba(108,99,255,0.2); border-radius: 16px; overflow: hidden; }
+        th { background: var(--surface2); color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 14px 20px; text-align: left; font-weight: 600; }
+        td { padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.9rem; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(108,99,255,0.05); }
+        .role-badge { padding: 3px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; }
+        .role-admin { background: rgba(247,37,133,0.15); color: var(--accent); }
+        .role-member { background: rgba(108,99,255,0.15); color: var(--primary); }
+        .status-badge { padding: 3px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; }
+        .status-active { background: rgba(6,214,160,0.15); color: #06d6a0; }
+        .status-inactive { background: rgba(255,255,255,0.08); color: #666; }
+        .action-btn { font-size: 0.78rem; padding: 4px 12px; border-radius: 6px; border: none; cursor: pointer; margin-right: 6px; transition: all 0.15s; }
+        .btn-toggle-on { background: rgba(247,37,133,0.15); color: var(--accent); }
+        .btn-toggle-on:hover { background: var(--accent); color: white; }
+        .btn-toggle-off { background: rgba(6,214,160,0.15); color: #06d6a0; }
+        .btn-toggle-off:hover { background: #06d6a0; color: #000; }
+        .btn-make-admin { background: rgba(108,99,255,0.15); color: var(--primary); }
+        .btn-make-admin:hover { background: var(--primary); color: white; }
+        .back-link { color: #888; text-decoration: none; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px; }
+        .back-link:hover { color: var(--primary); }
+    </style>
+</head>
+<body>
+    <nav class="navbar-custom">
+        <a href="/dashboard" class="navbar-brand">Task<span>Flow</span></a>
+        <a href="/auth/logout" style="color:#888; text-decoration:none; font-size:0.9rem;">
+            <i class="fas fa-sign-out-alt me-1"></i>Logout
+        </a>
+    </nav>
+
+    <div class="main-content">
+        <a href="/dashboard" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <h1 class="page-title">Manage <span>Users</span></h1>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="u, iter : ${users}">
+                        <td style="color:#555;" th:text="${iter.count}">1</td>
+                        <td style="font-weight:600;" th:text="${u.username}">username</td>
+                        <td style="color:#888;" th:text="${u.email}">email</td>
+                        <td>
+                            <span class="role-badge"
+                                  th:classappend="${u.role.name() == 'ROLE_ADMIN'} ? 'role-admin' : 'role-member'"
+                                  th:text="${u.role.name() == 'ROLE_ADMIN'} ? 'Admin' : 'Member'">Role</span>
+                        </td>
+                        <td>
+                            <span class="status-badge"
+                                  th:classappend="${u.active} ? 'status-active' : 'status-inactive'"
+                                  th:text="${u.active} ? 'Active' : 'Inactive'">Status</span>
+                        </td>
+                        <td style="color:#666;" th:text="${#temporals.format(u.createdAt, 'MMM dd, yyyy')}">date</td>
+                        <td>
+                            <form th:action="@{/admin/users/{id}/toggle(id=${u.id})}"
+                                  method="post" style="display:inline;">
+                                <button type="submit"
+                                        th:class="${u.active} ? 'action-btn btn-toggle-on' : 'action-btn btn-toggle-off'"
+                                        th:text="${u.active} ? 'Deactivate' : 'Activate'">Toggle</button>
+                            </form>
+                            <form th:if="${u.role.name() != 'ROLE_ADMIN'}"
+                                  th:action="@{/admin/users/{id}/role(id=${u.id})}"
+                                  method="post" style="display:inline;">
+                                <input type="hidden" name="role" value="ROLE_ADMIN">
+                                <button type="submit" class="action-btn btn-make-admin">Make Admin</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

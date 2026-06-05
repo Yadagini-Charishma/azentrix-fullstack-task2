@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Board — TaskFlow</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --primary: #6c63ff; --secondary: #3f37c9; --accent: #f72585; --dark: #1a1a2e; --surface: #16213e; }
+        body { background: var(--dark); color: #e0e0e0; font-family: 'Segoe UI', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .form-card { background: var(--surface); border: 1px solid rgba(108,99,255,0.3); border-radius: 20px; padding: 36px; width: 100%; max-width: 520px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+        .form-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 24px; }
+        .form-title span { color: var(--primary); }
+        .form-control, .form-select {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+        .form-control:focus, .form-select:focus {
+            background: rgba(108,99,255,0.1);
+            border-color: var(--primary);
+            color: #fff;
+            box-shadow: none;
+        }
+        .form-select option { background: #16213e; }
+        .form-label { color: #bbb; font-size: 0.85rem; font-weight: 600; }
+        .btn-submit { background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; border-radius: 10px; padding: 11px 28px; color: white; font-weight: 700; cursor: pointer; }
+        .btn-cancel { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 11px 20px; color: #aaa; text-decoration: none; font-size: 0.9rem; }
+        .btn-cancel:hover { background: rgba(255,255,255,0.1); color: white; }
+    </style>
+</head>
+<body>
+    <div class="form-card">
+        <div class="form-title">Create New <span>Board</span></div>
+
+        <form th:action="@{/boards/new}" th:object="${boardDTO}" method="post">
+            <div class="mb-3">
+                <label class="form-label">Board Name *</label>
+                <input type="text" th:field="*{name}" class="form-control"
+                       placeholder="e.g., Sprint 1, Marketing Campaign" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea th:field="*{description}" class="form-control" rows="3"
+                          placeholder="What is this board for?"></textarea>
+            </div>
+            <div class="mb-4">
+                <label class="form-label">Add Members (optional)</label>
+                <select th:field="*{memberIds}" class="form-select" multiple size="4">
+                    <option th:each="user : ${allUsers}"
+                            th:value="${user.id}"
+                            th:text="${user.username}">user</option>
+                </select>
+                <small style="color:#555; font-size:0.78rem;">Hold Ctrl/Cmd to select multiple members</small>
+            </div>
+            <div class="d-flex gap-3">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-plus me-1"></i>Create Board
+                </button>
+                <a href="/dashboard" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

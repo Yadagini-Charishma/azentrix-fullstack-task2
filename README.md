@@ -179,6 +179,68 @@ http://localhost:8080
 ```
 
 ---
+## Screenshots
+
+### Login Page
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/76feb524-e326-436e-899f-db4da19bc1f9" />
+
+
+### Registration Page
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/493a4caf-863f-4076-a3ed-eff89bf5c7c4" />
+
+
+### Dashboard
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/46e59775-bd1a-42c4-bcd1-204d157a748a" />
+
+
+### Board Management
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/161d78ac-e851-4fc9-81cd-a13bf80aa0b9" />
+
+
+### Task Management
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c891fcd0-f9fc-44e3-8f12-c59438da75ba" />
+
+
+### User Management
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ceba7389-7858-4653-9f5f-ec479c43c380" />
+
+
+### Real-Time Updates
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/4635b111-db47-472a-b042-c9dd44ea5109" />
+
+
+---
+
+## Live Demo
+
+**Application URL:**
+Deployment Link Here
+
+**Status:** Active
+
+---
+
+## API Testing
+
+The application APIs were tested using Postman.
+
+### Tested Functionalities
+
+* User Registration
+* User Login
+* JWT Authentication
+* Board Management APIs
+* Task Management APIs
+* User Management APIs
+
+---
 
 ## Developer
 

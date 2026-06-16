@@ -263,7 +263,13 @@
         </div>
         <div class="nav-right">
             <span class="live-badge"><span class="live-dot"></span>Live</span>
-            <a href="/dashboard" class="btn-sm-custom btn-back"><i class="fas fa-arrow-left me-1"></i>Dashboard</a>
+			<a th:href="@{/boards/{id}/edit(id=${board.id})}" class="btn-sm-custom" 
+			   style="background:rgba(108,99,255,0.15); color:var(--primary); border:1px solid rgba(108,99,255,0.3);">
+			    <i class="fas fa-cog me-1"></i>Board Settings
+			</a>
+			<a href="/dashboard" class="btn-sm-custom btn-back">
+			    <i class="fas fa-arrow-left me-1"></i>Dashboard
+			</a>
             <a href="/auth/logout" class="btn-sm-custom btn-logout"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
         </div>
     </nav>

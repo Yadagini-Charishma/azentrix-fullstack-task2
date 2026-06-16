@@ -117,6 +117,53 @@ public class BoardController {
 
         return "ok";
     }
+    @GetMapping("/{id}/edit")
+    public String editBoardForm(@PathVariable Long id,
+                                @AuthenticationPrincipal UserDetails userDetails,
+                                Model model) {
+        Board board = boardService.findById(id);
+        User currentUser = userService.findByUsername(userDetails.getUsername());
+
+        BoardDTO dto = new BoardDTO();
+        dto.setId(board.getId());
+        dto.setName(board.getName());
+        dto.setDescription(board.getDescription());
+
+        model.addAttribute("boardDTO", dto);
+        model.addAttribute("board", board);
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("allUsers", userService.findAllUsers());
+        model.addAttribute("currentMembers", board.getMembers());
+
+        return "board-edit";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String updateBoard(@PathVariable Long id,
+                              @Valid @ModelAttribute BoardDTO dto,
+                              @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userService.findByUsername(userDetails.getUsername());
+        boardService.updateBoard(id, dto, user);
+        return "redirect:/boards/" + id;
+    }
+
+    @PostMapping("/{boardId}/members/add")
+    public String addMember(@PathVariable Long boardId,
+                            @RequestParam Long userId,
+                            @AuthenticationPrincipal UserDetails userDetails) {
+        User currentUser = userService.findByUsername(userDetails.getUsername());
+        boardService.addMember(boardId, userId, currentUser);
+        return "redirect:/boards/" + boardId + "/edit";
+    }
+
+    @PostMapping("/{boardId}/members/remove")
+    public String removeMember(@PathVariable Long boardId,
+                               @RequestParam Long userId,
+                               @AuthenticationPrincipal UserDetails userDetails) {
+        User currentUser = userService.findByUsername(userDetails.getUsername());
+        boardService.removeMember(boardId, userId, currentUser);
+        return "redirect:/boards/" + boardId + "/edit";
+    }
     @PostMapping("/{id}/delete")
     public String deleteBoard(@PathVariable Long id,
                               @AuthenticationPrincipal UserDetails userDetails) {
